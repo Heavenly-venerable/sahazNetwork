@@ -3,7 +3,6 @@ import { onMounted } from "vue";
 import HeroSection from "../components/v2/HeroSection.vue";
 import CardProduct from "../components/v2/CardProduct.vue";
 import FeatureList from "../components/v2/FeatureList.vue";
-import Card from "../components/v2/Card.vue";
 import CTA from "../components/v2/CTA.vue";
 import StaticNumber from "../components/v2/StaticNumber.vue";
 
@@ -67,7 +66,6 @@ onMounted(() => {
     <FeatureList />
     <CardProduct :paketan="paketan" :heading="heading" />
     <CTA :cta="cta" />
-    <Card />
     <StaticNumber />
   </div>
 </template>

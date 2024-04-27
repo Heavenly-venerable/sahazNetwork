@@ -1,6 +1,6 @@
 <template>
   <div
-    class="pb-16 flex flex-col md:flex-row justify-center items-center dark:bg-gray-900"
+    class="pb-16 p-4 flex flex-col md:flex-row justify-center items-center dark:bg-gray-900"
   >
     <div
       class="p-6 bg-white border border-gray-200 md:rounded-lg shadow md:w-[80%] dark:bg-gray-800 dark:border-gray-700"

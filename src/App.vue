@@ -14,7 +14,7 @@ const route = useRoute();
 <template>
   <div class="bg-white dark:bg-gray-900">
     <Navbar @switch="toggleDark()" />
-    <router-view v-slot="{ Component }">
+    <router-view class="pt-16" v-slot="{ Component }">
       <transition name="fade">
         <component :is="Component" :key="route.fullPath" />
       </transition>

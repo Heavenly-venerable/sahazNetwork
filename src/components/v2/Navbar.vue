@@ -1,145 +1,136 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from "vue";
-import { useRoute } from "vue-router";
-import { useDark } from "@vueuse/core";
+import { onMounted, onUnmounted, ref, reactive } from "vue";
+//import { RouteLocationRaw, RouterLink, useRoute } from "vue-router";
+//import { useDynamicDropdowns } from "../composable/useDynamicDropdowns";
 
-defineEmits(["switch"]);
+//const dropdownIds = ["profile", "ppdb", "program"];
+//const { profile, ppdb, program, toggleDropdown } =
+//  useDynamicDropdowns(dropdownIds);
 
-const links = [
-  { name: "Home", url: "/" },
-  { name: "Tentang Kami", url: "/about" },
-  { name: "Harga", url: "/price" },
-  { name: "Hubungi Kami", url: "/contact" },
-];
-const route = useRoute();
-const showNavbar = ref(false);
-const isDark = useDark();
+/*
+interface Item {
+  label: string;
+  url?: RouteLocationRaw;
+  items?: Item[];
+}
 
-watch(
-  () => route.fullPath,
-  () => {
-    showNavbar.value = false;
-  },
+interface DropdownStates {
+  [key: string]: boolean;
+}
+*/
+
+// const route = useRoute();
+
+const showSidebar = ref(false);
+
+// items atau links yang ada di menu
+const items = ref([
+  { label: "Home", url: { name: "/" } },
+  { label: "Tentang Kami", url: { name: "/about" } },
+  { label: "Harga", url: { name: "/price" } },
+  { label: "Kontak Kami", url: { name: "/contact" } },
+]);
+
+// state untuk semua item dopdown default: false
+const dropdownStates = reactive(
+  // buat object dari semua items dan semuanya false
+  Object.fromEntries(items.value.map((item) => [item.label, false])),
 );
+
+// toggle untuk setiap dropdown output: true | false
+function toggleDropdown(label: string): void {
+  // mengembalikan kebalikan dari boolean dropdownStates
+  dropdownStates[label] = !dropdownStates[label];
+}
+
+/* tutup sidebar dan dropdown ketika mengganti route output: sidebar=false DropdownStates=[key]false
+watch(route, () => {
+  showSidebar.value = false;
+  Object.keys(dropdownStates).forEach((key) => {
+    dropdownStates[key] = false;
+  });
+});
+*/
 
 onMounted(() => {
   // handle ketika click di luar sidebar maka sidebar akan tertutup output: showSidebar=false
   window.addEventListener("click", (e: MouseEvent) => {
-    const nb: Element | null = document.querySelector("#navbar-button");
-    const cn: Element | null = document.querySelector("#container-navbar");
-    const navbar: Element | null = document.querySelector("#navbar");
+    const sb: Element | null = document.querySelector("#sidebar-button");
+    const cs: Element | null = document.querySelector("#containerSidebar");
+    const sidebar: Element | null = document.querySelector("#sidebar");
     const target: Element = e.target as Element;
 
     if (
-      !nb?.contains(target) &&
-      !navbar?.contains(target) &&
-      !cn?.contains(target)
+      !sb?.contains(target) &&
+      !sidebar?.contains(target) &&
+      !cs?.contains(target)
     ) {
-      showNavbar.value = false;
+      showSidebar.value = false;
     }
   });
 });
 
 onUnmounted(() => {
-  window.removeEventListener("click", () => {});
+  window.removeEventListener("click", () => { });
 });
 </script>
 
 <template>
-  <nav class="bg-white border-gray-200 dark:bg-gray-900">
-    <div
-      class="relative max-w-screen-xl flex flex-wrap items-center justify-between md:justify-evenly mx-auto p-4"
-    >
-      <RouterLink
-        to="/"
-        class="flex items-center space-x-3 rtl:space-x-reverse"
-      >
-        <span
-          class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-          >Sahaz<span
-            class="bg-clip-text text-transparent bg-gradient-to-r from-primary-100 to-primary-200"
-            >Network</span
-          >
-        </span>
-      </RouterLink>
-      <div class="flex items-center gap-2">
-        <button
-          type="button"
-          @click="$emit('switch')"
-          class="inline-flex items-center p-2 justify-center text-sm text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-        >
-          <div v-if="isDark == false">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 fill-gray-500"
-              height="16"
-              width="16"
-              viewBox="0 0 512 512"
-            >
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
-              <path
-                d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
-              />
-            </svg>
-          </div>
-          <div v-if="isDark == true">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 fill-gray-400"
-              height="16"
-              width="12"
-              viewBox="0 0 384 512"
-            >
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
-              <path
-                d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
-              />
-            </svg>
-          </div>
-          <span class="sr-only">Icon description</span>
-        </button>
-
-        <button
-          @click="showNavbar = !showNavbar"
-          id="navbar-button"
-          data-collapse-toggle="navbar-default"
-          type="button"
-          class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          aria-controls="navbar-default"
-          aria-expanded="false"
-        >
-          <span class="sr-only">Open main menu</span>
-          <svg
-            class="w-5 h-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 17 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
+  <nav
+    class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 md:px-4 md:py-4">
+    <div class="px-3 py-3 md:px-5 md:pl-3">
+      <div class="flex items-center justify-between">
+        <a href="/" class="flex items-center md:me-24">
+          <p class="text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Sahaz<span
+              class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-600">Network</span></p>
+        </a>
+        <button @click="showSidebar = !showSidebar" id="sidebar-button" data-drawer-target="logo-sidebar"
+          data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button"
+          class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+          <span class="sr-only">Open sidebar</span>
+          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" fill-rule="evenodd"
+              d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+            </path>
           </svg>
         </button>
-        <div v-if="showNavbar" class="absolute right-0 top-10 w-full p-4 md:w-auto" id="navbar">
-          <div
-            id="container-navbar"
-            class="font-medium flex flex-col items-center p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
-          >
-            <RouterLink
-              :to="url"
-              class="px-4 py-2 text-slate-900 hover:underline hover:bg-primary-100 hover:text-white hover:rounded-lg dark:text-white"
-              v-for="{ name, url } in links"
-            >
-              {{ name }}
-            </RouterLink>
-          </div>
-        </div>
       </div>
     </div>
   </nav>
+
+  <aside v-if="showSidebar" id="logo-sidebar sidebar"
+    class="fixed top-0 md:top-10 right-0 z-40 w-64 md:w-full h-screen md:h-auto pt-20 transition-transform bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    aria-label="Sidebar">
+    <div id="containerSidebar" class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+      <ul class="space-y-2 font-medium">
+        <li v-for="item in items">
+          <div v-if="!item.items">
+            <a :href="item.url.name"
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+              <span class="ms-3">{{ item.label }}</span>
+            </a>
+          </div>
+          <div v-else-if="item.items">
+            <button @click="toggleDropdown(item.label)" type="button"
+              class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+              aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
+              <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">{{ item.label }}</span>
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 4 4 4-4" />
+              </svg>
+            </button>
+            <ul v-show="dropdownStates[item.label]" id="dropdown-example" class="py-2 space-y-2">
+              <li v-for="subItem in item.items">
+                <a :href="subItem.url.name"
+                  class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">{{
+                    subItem.label }}</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </aside>
 </template>

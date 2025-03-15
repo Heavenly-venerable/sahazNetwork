@@ -14,9 +14,7 @@ const informasi = [
     <div class="mx-auto md:w-[82%] md:flex md:justify-between">
       <div class="grid grid-cols-2 gap-8 px-4 py-6 lg:py-8 md:grid-cols-4">
         <div>
-          <h2
-            class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white"
-          >
+          <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
             Informasi
           </h2>
           <ul class="text-gray-500 dark:text-gray-400 font-medium">
@@ -28,9 +26,7 @@ const informasi = [
           </ul>
         </div>
         <div>
-          <h2
-            class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white"
-          >
+          <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
             Help center
           </h2>
           <ul class="text-gray-500 dark:text-gray-400 font-medium">
@@ -50,11 +46,9 @@ const informasi = [
         </div>
       </div>
     </div>
-    <div
-      class="flex justify-center items-center px-4 py-6 bg-gray-100 dark:bg-gray-700"
-    >
-      <span class="text-sm text-gray-500 dark:text-gray-300 sm:text-center"
-        >© 2023 <a href="https://flowbite.com/">SahazNetwork™</a>. All Rights
+    <div class="flex justify-center items-center px-4 py-6 bg-gray-100 dark:bg-gray-700">
+      <span class="text-sm text-gray-500 dark:text-gray-300 sm:text-center">© 2025 <a href="#">Hariyanto Saputra</a>.
+        All Rights
         Reserved.
       </span>
     </div>

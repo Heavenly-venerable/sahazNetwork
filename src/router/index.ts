@@ -6,7 +6,7 @@ import BlogDetailView from '../views/BlogDetailView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else if (to.hash) {

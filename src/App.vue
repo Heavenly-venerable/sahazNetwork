@@ -1,26 +1,24 @@
-<script setup lang="ts">
-import { RouterView, useRoute } from "vue-router";
-import { useDark, useToggle } from "@vueuse/core";
-
-import Navbar from "./components/v2/Navbar.vue";
-import Footer from "./components/v2/Footer.vue";
-
-const isDark = useDark();
-const toggleDark = useToggle(isDark);
-
-const route = useRoute();
-</script>
-
 <template>
-  <div class="bg-white dark:bg-gray-900">
-    <Navbar @switch="toggleDark()" />
-    <router-view class="pt-16" v-slot="{ Component }">
-      <transition name="fade">
-        <component :is="Component" :key="route.fullPath" />
-      </transition>
-    </router-view>
+  <div class="min-h-screen bg-white font-sans antialiased">
+    <Navbar />
+
+    <main>
+      <router-view />
+    </main>
+
     <Footer />
+    <ScrollToTop />
   </div>
 </template>
 
-<style scoped></style>
+<script setup>
+import Navbar from './components/layout/Navbar.vue'
+import Footer from './components/layout/Footer.vue'
+import ScrollToTop from './components/layout/ScrollToTop.vue'
+</script>
+
+<style>
+html {
+  scroll-behavior: smooth;
+}
+</style>
